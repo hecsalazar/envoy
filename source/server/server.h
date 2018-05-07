@@ -170,6 +170,7 @@ public:
   const LocalInfo::LocalInfo& localInfo() override { return *local_info_; }
 
 private:
+  ProtobufTypes::MessagePtr dumpBootstrapConfig();
   void flushStats();
   void initialize(Options& options, Network::Address::InstanceConstSharedPtr local_address,
                   ComponentFactory& component_factory);
@@ -196,6 +197,7 @@ private:
   ProdListenerComponentFactory listener_component_factory_;
   ProdWorkerFactory worker_factory_;
   std::unique_ptr<ListenerManager> listener_manager_;
+  std::unique_ptr<LdsApi> lds_api_;
   std::unique_ptr<Configuration::Main> config_;
   Network::DnsResolverSharedPtr dns_resolver_;
   Event::TimerPtr stat_flush_timer_;
@@ -207,6 +209,8 @@ private:
   std::unique_ptr<Server::GuardDog> guard_dog_;
   bool terminated_;
   std::unique_ptr<Logger::FileSinkDelegate> file_logger_;
+  envoy::config::bootstrap::v2::Bootstrap bootstrap_;
+  ConfigTracker::EntryOwnerPtr config_tracker_entry_;
 };
 
 } // namespace Server
